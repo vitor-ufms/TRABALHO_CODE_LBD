@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.postgres
-    image: postgres
     container_name: postgres_container
     ports:
       - 5432:5432
@@ -13,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     networks:
       network-banco:
-        ipv4_address: 174.20.0.2
+        ipv4_address: 175.20.0.2
 
   pgAdmin4:
     container_name: pgAdmin4-interface
@@ -27,7 +26,7 @@ services:
       - 8080:80
     networks:
       network-banco:
-        ipv4_address: 174.20.0.3
+        ipv4_address: 175.20.0.3
 
   nodejs:
     build:
@@ -49,7 +48,7 @@ services:
       - .:/lbd
     networks:
       network-banco:
-        ipv4_address: 174.20.0.4
+        ipv4_address: 175.20.0.4
 
 networks:
   network-banco:
@@ -57,4 +56,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 174.20.0.0/24
+        - subnet: 175.20.0.0/24
