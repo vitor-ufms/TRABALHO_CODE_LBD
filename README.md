@@ -19,6 +19,7 @@ docker-compose up -d
 ```
 
 O PGAdmin4 poderá ser acessado usando link http://0.0.0.0:8080 ou http://174.20.0.3
+O servidor usando Node pode ser acessado usando  link http://0.0.0.0:9009
 
 ```
 User: pgadmin4@pgadmin.org
@@ -26,6 +27,8 @@ Password: pgadmin4
 ```
 
 O ip do servidor Postgres é 174.20.0.2
+pgadim 174.20.0.3
+Node js 174.20.4
 
 ```
 User: postgres
