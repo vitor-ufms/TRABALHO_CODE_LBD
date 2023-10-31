@@ -1,8 +1,5 @@
 @author: Diego Bulhões - https://github.com/DiegoBulhoes/database-laboratory
 
-# Docker play
-https://labs.play-with-docker.com/
-
 
 # Docker PostgreSQL
 
@@ -34,8 +31,6 @@ Node js 174.20.4
 User: postgres
 Password: postgres
 ```
-## Acessando o PSQL
-	docker exec -it postgres psql -U postgres
 
 ## Instalação do Docker
 
