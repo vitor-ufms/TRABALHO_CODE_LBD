@@ -19,7 +19,8 @@ res.send('Got a DELETE request at /user');
 })
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+   // res.send('Hello World!')
+    res.sendFile(__dirname + '/index.html');
     console.log('Dados get recebidos no  get:', req.body);
 })
 
