@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exemplo de Formulário em JavaScript</title>
+</head>
+<body>
+    <h1>Formulário em JavaScript</h1>
+
+    <form id="meuForm">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <input type="submit" value="Enviar">
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3000/', true);
+        // Adicione um ouvinte de evento para o envio do formulário
+        document.getElementById('meuForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Obtém os valores dos campos do formulário
+            var nome = document.getElementById('nome').value;
+            var email = document.getElementById('email').value;
+
+            var data = {
+                nome: nome,
+                email: email
+            };
+
+            // Envia os dados como JSON
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+
+            // Exibe os dados coletados
+            var resultado = document.getElementById('resultado');
+            resultado.innerHTML = 'Nome: ' + nome + '<br>Email: ' + email;
+            // xhr.send(resultado);
+        
+        });
+    </script>
+</body>
+</html>

@@ -29,6 +29,28 @@ services:
       network-banco:
         ipv4_address: 174.20.0.3
 
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodejs
+    image: node
+    container_name: nodejs-interface
+    working_dir: /lbd
+    command:  npm run dev
+    environment:
+      LOGIN_EMAIL: pgadmin4@pgadmin.org
+      PASSWORD: pgadmin4
+      DATABASE_URL: postgres://todoapp@postgres/todos
+    depends_on: 
+      - postgres
+    ports:
+      - 9009:9009
+    volumes:
+      - .:/lbd
+    networks:
+      network-banco:
+        ipv4_address: 174.20.0.4
+
 networks:
   network-banco:
     driver: bridge
