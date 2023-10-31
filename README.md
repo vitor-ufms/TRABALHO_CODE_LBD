@@ -23,9 +23,9 @@ User: pgadmin4@pgadmin.org
 Password: pgadmin4
 ```
 
-O ip do servidor Postgres é 174.20.0.2
-pgadim 174.20.0.3
-Node js 174.20.4
+O ip do servidor Postgres é 175.20.0.2
+pgadim 175.20.0.3
+Node js 175.20.4
 
 ```
 User: postgres
