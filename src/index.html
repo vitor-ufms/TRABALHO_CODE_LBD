@@ -4,7 +4,7 @@
     <title>Exemplo de Formulário em JavaScript</title>
 </head>
 <body>
-    <h1>Formulário em JavaScript</h1>
+    <h1>Cadastra cliente</h1>
 
     <form id="meuForm">
         <label for="nome">Nome:</label>
@@ -13,37 +13,52 @@
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br>
 
+        <label for="idade">Idade:</label>
+        <input type="number" id="idade" name="idade" required><br>
+
+
         <input type="submit" value="Enviar">
     </form>
 
     <div id="resultado"></div>
+    <div id="resposta"></div>
 
     <script>
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3000/', true);
-        // Adicione um ouvinte de evento para o envio do formulário
-        document.getElementById('meuForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+xhr.open('POST', 'http://localhost:9009/', true);
+// Adicione um ouvinte de evento para o envio do formulário
+document.getElementById('meuForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o envio padrão do formulário
 
-            // Obtém os valores dos campos do formulário
-            var nome = document.getElementById('nome').value;
-            var email = document.getElementById('email').value;
+    // Obtém os valores dos campos do formulário
+    var nome = document.getElementById('nome').value;
+    var email = document.getElementById('email').value;
 
-            var data = {
-                nome: nome,
-                email: email
-            };
+    var data = {
+        nome: nome,
+        email: email
+    };
 
-            // Envia os dados como JSON
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
+    //Envia os dados como JSON
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(data));
 
-            // Exibe os dados coletados
-            var resultado = document.getElementById('resultado');
-            resultado.innerHTML = 'Nome: ' + nome + '<br>Email: ' + email;
-            // xhr.send(resultado);
-        
-        });
+    var resultado = document.getElementById('resultado');
+    resultado.innerHTML = 'Nome: ' + nome + '<br>Email: ' + email;
+
+    // Define um ouvinte de evento para lidar com a resposta do servidor
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            // Se a solicitação foi bem-sucedida, a resposta do servidor estará em xhr.responseText
+            var resposta = document.getElementById('resposta');
+            resposta.innerHTML = 'Resposta do servidor: ' + xhr.responseText;
+        } else {
+            // Trate erros ou respostas não esperadas aqui
+            console.error('Erro na solicitação: ' + xhr.status);
+        }
+    });
+});
+
     </script>
 </body>
 </html>
