@@ -39,7 +39,13 @@ app.get('/cadastro_usuario.html', function (req, res) {
     console.log(' recebeu novo :');
     res.sendFile(__dirname + '/cadastro_usuario.html');
 })
-  
+
+app.get('/listar_carros.html', function (req, res) {
+    // onsole.log('get  ...');
+    console.log(' listar carros :');
+    res.sendFile(__dirname + '/listar_carros.html');
+})
+
 // app.all('/', function (req, res, next) {
 //     console.log('Accessing the secret section ...');
 //     res.send('Hello World!55555555')
