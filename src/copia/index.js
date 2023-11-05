@@ -27,17 +27,10 @@ app.get('/', (req, res) => {
     console.log('Parâmetros de consulta recebidos no GET:', req.query);
 })
 
-app.get('/index.html', (req, res) => {
-    // res.send('Hello World!')
-     res.sendFile(__dirname + '/index.html');
-     //console.log('Dados get recebidos no  get:', req.body);
-     console.log('Parâmetros de consulta recebidos no GET:', req.query);
- })
-
-app.get('/cadastro_usuario.html', function (req, res) {
+app.get('/index.html', function (req, res) {
     // onsole.log('get  ...');
     console.log(' recebeu novo :');
-    res.sendFile(__dirname + '/cadastro_usuario.html');
+    res.sendFile(__dirname + '/index.html');
 })
   
 // app.all('/', function (req, res, next) {
