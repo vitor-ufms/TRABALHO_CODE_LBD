@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.postgres
-    container_name: postgres_container
+    container_name: postgres
     ports:
       - 5432:5432
     environment:
@@ -15,7 +15,7 @@ services:
         ipv4_address: 175.20.0.2
 
   pgAdmin4:
-    container_name: pgAdmin4-interface
+    container_name: pgAdmin4
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
