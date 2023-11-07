@@ -32,12 +32,12 @@ const Venda = database.define('venda', {
 
 Venda.belongsTo(Cliente,{
     constraint: true,
-    foreignKey: 'idCliente'
+    foreignKey: 'id_cliente'
 }) 
 
 Venda.belongsTo(Funcionario,{
     constraint: true,
-    foreignKey: 'idFuncionario'
+    foreignKey: 'id_funcionario'
 })  
 
 module.exports = Venda;

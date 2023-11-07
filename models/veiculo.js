@@ -24,7 +24,7 @@ const Veiculo = database.define('veiculo', {
 
 Veiculo.belongsTo(Modelo, {
     constraint: true,
-    foreignKey: 'idModelo'
+    foreignKey: 'id_modelo'
 });
 
 module.exports = Veiculo;

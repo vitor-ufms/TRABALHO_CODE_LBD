@@ -21,13 +21,13 @@ const Funcionario = database.define('funcionario', {
         type: Sequelize.STRING(200)
     },
     email: {
-        type: Sequelize.STRING(20)
+        type: Sequelize.STRING(50)
     },
     data_nasc: {
         type: Sequelize.DATE
     },
     sexo: {
-        type: Sequelize.CHAR,
+        type: Sequelize.CHAR(1),
         allowNull: false
     },
     salario: {
