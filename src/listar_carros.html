@@ -87,11 +87,11 @@
 
 
 <script>
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:9009/', true);
         // Adicione um ouvinte de evento para o envio do formulário
         document.getElementById('meuForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Impede o envio padrão do formulário
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:9009/', true);
         
             // Obtém os valores dos campos do formulário                 
             var data = {

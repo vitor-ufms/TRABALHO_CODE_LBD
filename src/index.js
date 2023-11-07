@@ -6,9 +6,14 @@ app.use(express.json()); // Para analisar dados JSON no corpo da solicitação
 app.use(express.urlencoded({ extended: true })); // Para analisar dados codificados no corpo da solicitação
 
 
+app.post('/insertCliente', function (req, res) {
+    console.log('Dados recebidos no POST insertcliente:', req.body);
+    res.send('Sucesso ao criar o novo usuário')    
+})
+
 app.post('/', function (req, res) {
     console.log('Dados recebidos no POST:', req.body);
-    res.send('Sucesso ao criar o novo usuário')    
+    res.send('Sucesso no teste')    
 })
 
 
@@ -34,10 +39,10 @@ app.get('/index.html', (req, res) => {
      console.log('Parâmetros de consulta recebidos no GET:', req.query);
  })
 
-app.get('/cadastro_usuario.html', function (req, res) {
+app.get('/cadastro_cliente.html', function (req, res) {
     // onsole.log('get  ...');
     console.log(' recebeu novo :');
-    res.sendFile(__dirname + '/cadastro_usuario.html');
+    res.sendFile(__dirname + '/cadastro_cliente.html');
 })
 
 app.get('/listar_carros.html', function (req, res) {
@@ -45,7 +50,11 @@ app.get('/listar_carros.html', function (req, res) {
     console.log(' listar carros :');
     res.sendFile(__dirname + '/listar_carros.html');
 })
-
+app.get('/cadastrar_compra.html', function (req, res) {
+    // onsole.log('get  ...');
+    console.log(' listar carros :');
+    res.sendFile(__dirname + '/cadastrar_compra.html');
+})
 // app.all('/', function (req, res, next) {
 //     console.log('Accessing the secret section ...');
 //     res.send('Hello World!55555555')
