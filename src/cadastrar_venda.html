@@ -67,7 +67,7 @@
     </nav>
 
     <section>
-        <h2>Cadastrar uma nova compra</h2>
+        <h2>Cadastrar uma nova Venda</h2>
         <p>Para realizar o cadastro da compra </p>
         <form id="meuForm">
             <label for="id_cliente"> código do cliente:</label>
@@ -189,7 +189,7 @@
             event.preventDefault(); // Impede o envio padrão do formulário
             
             var xhrr = new XMLHttpRequest();
-            xhrr.open('POST', '/', true);
+            xhrr.open('get', '/selectClientesBasic', true);
 
 
             var data = {

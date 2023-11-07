@@ -75,6 +75,7 @@ app.post('/insertCliente', async (req, res) => {
         });
 
         if (clienteExistente) {
+            // res.send('Cliente com este CPF já cadastrado.');
             return res.status(400).json({ error: 'Cliente com este CPF já cadastrado.' });
         }
 
@@ -89,6 +90,7 @@ app.post('/insertCliente', async (req, res) => {
         });
 
         res.status(201).json(novoCliente);
+        // res.send('Cliente inserido com sucesso');
     } catch (error) {
         console.error('Erro ao cadastrar cliente:', error);
         res.status(500).json({ error: 'Erro interno do servidor' });
@@ -176,7 +178,9 @@ app.get('/selectClientesBasic', async (req, res) => {
     } catch (error) {
         console.error('Erro ao recuperar clientes:', error);
         res.status(500).json({ error: 'Erro interno do servidor' });
+        
     }
+    
 });
 
 // Retorna todos os funcionários cadastrados, apenas os campos id e nome
