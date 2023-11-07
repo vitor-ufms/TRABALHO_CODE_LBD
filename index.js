@@ -46,10 +46,10 @@ app.get('/index.html', (req, res) => {
     console.log('Parâmetros de consulta recebidos no GET:', req.query);
 })
 
-app.get('/cadastro_usuario.html', function (req, res) {
+app.get('/cadastrar_cliente.html', function (req, res) {
     // onsole.log('get  ...');
-    console.log(' recebeu novo :');
-    res.sendFile(__dirname + '/src/cadastro_usuario.html');
+    console.log(' cadastrar_cliente.html :');
+    res.sendFile(__dirname + '/src/cadastrar_cliente.html');
 })
 
 app.get('/listar_carros.html', function (req, res) {

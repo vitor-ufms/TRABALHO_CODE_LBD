@@ -50,10 +50,10 @@ app.get('/listar_carros.html', function (req, res) {
     console.log(' listar carros :');
     res.sendFile(__dirname + '/listar_carros.html');
 })
-app.get('/cadastrar_compra.html', function (req, res) {
+app.get('/cadastrar_venda.html', function (req, res) {
     // onsole.log('get  ...');
     console.log(' listar carros :');
-    res.sendFile(__dirname + '/cadastrar_compra.html');
+    res.sendFile(__dirname + '/cadastrar_venda.html');
 })
 // app.all('/', function (req, res, next) {
 //     console.log('Accessing the secret section ...');
