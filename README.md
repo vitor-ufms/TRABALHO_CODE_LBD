@@ -1,5 +1,10 @@
 @author: Diego Bulhões - https://github.com/DiegoBulhoes/database-laboratory
 
+Primeiro rode o comando a seguir para instalar as dependências do nodeJS:
+
+```
+npm ci
+```
 
 # Docker PostgreSQL
 

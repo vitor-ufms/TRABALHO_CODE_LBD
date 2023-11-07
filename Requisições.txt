@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Requisições
 
 Cliente: Cadastro de um novo cliente - ok
@@ -20,4 +21,28 @@ Login: Implementar tela de login, supõe-se que o login e senha já
 	estão cadastrados no BD
 
 Venda: Cadastro de uma nova venda
+=======
+## Requisições
+
+Cliente: Cadastro de um novo cliente - ok
+	 Atualização de dados do cliente
+ 	 Deletar um cliente :?
+	 Seleção de todos os clientes (em uma tabela??)
+
+Fabricante: Cadastro de um novo fabricante
+
+Modelo: Cadastro de um novo modelo de veiculo
+
+Veiculo: Cadastro de um novo veículo
+	 Seleção de todos os veículos
+
+Funcionário: Seleção de todos os funcionários
+	     Seleção do salário dos funcionários no mês atual,
+		com comissão
+
+Login: Implementar tela de login, supõe-se que o login e senha já 
+	estão cadastrados no BD
+
+Venda: Cadastro de uma nova venda
+>>>>>>> 51d3e3215d78572d7edba842424271834344f4d7
        Seleção de todas as vendas no último mês
