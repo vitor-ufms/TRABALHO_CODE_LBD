@@ -146,7 +146,7 @@ app.post('/updateCliente', async (req, res) => {
             where: { id_cliente: id_cliente },
             returning: true} );
 
-        res.status(201).json(updateCliente);
+        res.status(201).send("Cliente atualizado com sucesso!");
         // res.send('Cliente inserido com sucesso');
     } catch (error) {
         console.error('Erro ao cadastrar cliente:', error);
@@ -319,8 +319,6 @@ app.delete('/deleteVeiculo/:id', async (req, res) => {
         res.status(500).json({ error: 'Erro interno do servidor ao excluir veículo.' });
     }
 });
-
-
 
 
 // app.all('/', function (req, res, next) {
