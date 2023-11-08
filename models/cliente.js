@@ -14,7 +14,11 @@ const Cliente = database.define('cliente', {
     },
     cpf: {
         type: Sequelize.STRING(11),
-        allowNull: false
+        allowNull: false,
+        unique: {
+            args: true,
+            msg: 'CPF já cadastrado. Por favor, insira um CPF único.'
+        }
     },
     endereco: {
         type: Sequelize.STRING(200),

@@ -18,12 +18,8 @@ const Venda = database.define('venda', {
         type: Sequelize.DECIMAL,
         allowNull: false
     },
-    comissão: {
+    comissao: {
         type: Sequelize.DECIMAL
-    },
-    status: {
-        type: Sequelize.STRING(20),
-        allowNull: false
     },
     data: {
         type: Sequelize.DATE

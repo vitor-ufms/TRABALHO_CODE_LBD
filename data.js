@@ -21,6 +21,27 @@ const modeloData = [
     { nome: 'Camaro', versao: 'Coupe 6.2 SS',  id_fabricante: 2 }
 ];
 
+const veiculoData = [
+    {
+        ano_fabricacao: 2020,
+        valor: 80000.00,
+        cor: 'Preto',
+        id_modelo: 1
+    },
+    {
+        ano_fabricacao: 2022,
+        valor: 400000.00,
+        cor: 'Amarelo',
+        id_modelo: 4
+    },
+    {
+        ano_fabricacao: 2017,
+        valor: 40000.00,
+        cor: 'Prata',
+        id_modelo: 2
+    },
+];
+
 const funcionariosData = [
     {
         nome: 'João Silva',
@@ -67,11 +88,12 @@ const loginData = [
         login: 'carlos.santos',
         senha: 'carlos123'
     }
-]
+];
 
 module.exports = {
     fabricanteData,
     modeloData,
+    veiculoData,
     funcionariosData,
     loginData
 };

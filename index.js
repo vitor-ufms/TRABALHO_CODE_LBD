@@ -52,6 +52,10 @@ app.get('/cadastrar_cliente.html', function (req, res) {
     res.sendFile(__dirname + '/src/cadastrar_cliente.html');
 })
 
+app.get('/atualizar_cliente.html', function (req, res) {
+    res.sendFile(__dirname + '/src/atualizar_cliente.html');
+})
+
 app.get('/listar_carros.html', function (req, res) {
     // onsole.log('get  ...');
     console.log(' listar carros :');
@@ -60,6 +64,10 @@ app.get('/listar_carros.html', function (req, res) {
 
 app.get('/cadastrar_venda.html', function (req, res) {
     res.sendFile(__dirname + '/src/cadastrar_venda.html');
+})
+
+app.get('/excluir_veiculo.html', function (req, res) {
+    res.sendFile(__dirname + '/src/excluir_veiculo.html');
 })
 
 // Rota para cadastrar um novo cliente
@@ -100,7 +108,7 @@ app.post('/insertCliente', async (req, res) => {
 // Rota para cadastrar um novo veiculo
 app.post('/insertVeiculo', async (req, res) => {
     try {
-        const { ano_fabricacao, valor, cor, id_modelo} = req.body; // veiculos é um array
+        const { ano_fabricacao, valor, cor, id_modelo } = req.body; // veiculos é um array
 
         // Crie uma nova venda no banco de dados
         const novoVeiculo = await Venda.create({
@@ -120,16 +128,18 @@ app.post('/insertVeiculo', async (req, res) => {
 // Rota para cadastrar uma nova venda
 app.post('/insertVenda', async (req, res) => {
     try {
-        const { id_cliente, id_func, valor, metodo_pagamento, comissao, veiculos} = req.body; // veiculos é um array
+        const { id_cliente, id_funcionario, metodo_pagamento, valor, veiculos } = req.body; // veiculos é um array
+
+        const comissao = 0.01 * valor; // Calcula a comissão
 
         // Crie uma nova venda no banco de dados
         const novaVenda = await Venda.create({
             id_cliente: id_cliente,
-            id_func: id_func,
+            id_funcionario: id_funcionario,
             data: new Date(),
             valor: valor,
             metodo_pagamento: metodo_pagamento,
-            comissao: comissao,
+            comissao: parseFloat(comissao.toFixed(2)),
         });
 
         // Itere sobre o array de veículos e insira cada veículo vendido na venda
@@ -150,7 +160,7 @@ app.get('/selectVeiculosDisponiveis', async (req, res) => {
     try {
         // Consulte todos os veículos disponíveis no banco de dados
         const veiculosDisponiveis = await Veiculo.findAll({
-            include: [Modelo, Fabricante],
+            include: [Modelo],
             where: {
                 // Condições opcionais para filtrar veículos, se necessário
             }
@@ -181,6 +191,26 @@ app.get('/selectClientesBasic', async (req, res) => {
         
     }
     
+});
+
+// Retorna todos os clientes cadastrados, apenas os campos id e nome
+app.get('/selectClienteFullwithCPF/:cpf', async (req, res) => {
+    const cpfCliente = req.params.cpf;
+
+    try {
+        // Consulte todos os clientes no banco de dados
+        const clientesFull = await Cliente.findAll({
+            where: {
+                // Condições opcionais para filtrar clientes, se necessário
+                cpf: cpfCliente
+            }
+        });
+
+        res.status(200).json(clientesFull);
+    } catch (error) {
+        console.error('Erro ao recuperar o cliente informado:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
 });
 
 // Retorna todos os funcionários cadastrados, apenas os campos id e nome
@@ -219,6 +249,28 @@ app.get('/selectModeloBasic', async (req, res) => {
     }
 });
 
+app.delete('/deleteVeiculo/:id', async (req, res) => {
+    const veiculoId = req.params.id;
+
+    try {
+        // Verifique se o veículo existe no banco de dados
+        const veiculo = await Veiculo.findByPk(veiculoId);
+
+        if (veiculo) {
+            // Se o veículo existir, exclua-o
+            await veiculo.destroy();
+            res.status(200).json({ message: 'Veículo excluído com sucesso.' });
+        } else {
+            res.status(404).json({ error: 'Veículo não encontrado.' });
+        }
+    } catch (error) {
+        console.error('Erro ao excluir veículo:', error);
+        res.status(500).json({ error: 'Erro interno do servidor ao excluir veículo.' });
+    }
+});
+
+
+
 
 // app.all('/', function (req, res, next) {
 //     console.log('Accessing the secret section ...');
@@ -246,15 +298,22 @@ async function startServer() {
             await Modelo.bulkCreate(data.modeloData);
         }
 
+        // Verifica se a tabela de veiculos está vazia
+        const veiculosCount = await Veiculo.count();
+        if (veiculosCount === 0) {
+            // Insere modelos se a tabela estiver vazia
+            await Veiculo.bulkCreate(data.veiculoData);
+        }
+
         // Verifica se a tabela de login está vazia
         const LoginCount = await Login.count();
-        if(LoginCount === 0){
+        if (LoginCount === 0) {
             await Login.bulkCreate(data.loginData);
         }
 
         // Verifica se a tabela de funcionários está vazia
         const FuncionarioCount = await Funcionario.count();
-        if(FuncionarioCount === 0){
+        if (FuncionarioCount === 0) {
             await Funcionario.bulkCreate(data.funcionariosData);
         }
 

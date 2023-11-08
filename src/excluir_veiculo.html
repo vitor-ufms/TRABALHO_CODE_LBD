@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de vendas de veículos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            margin: 0 10px;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Sistema de vendas de veículos</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Início</a>
+        <a href="cadastrar_cliente.html">Novo cliente</a>
+        <a href="atualizar_cliente.html">Atualizar cadastro do cliente</a>
+        <a href="cadastrar_venda.html">Cadastrar Venda</a>
+        <a href="excluir_veiculo.html">Excluir veículo</a>
+    </nav>
+
+    <section>
+        <h2>Vizualize todos os veículos disponíveis</h2>
+        <div id="veiculos-list"></div>
+        <h3>Digite o ID do veículo para excluir</h3>
+        <input type="text" id="veiculo-id">
+
+        <button onclick="excluirVeiculo()">Excluir Veículo</button>
+
+        <div id="mensagem"></div>
+        <div id="veiculos-list"></div>
+    </section>
+
+    <footer>
+        &copy; 2023 Todos os direitos reservados.
+    </footer>
+
+
+    <script>
+        function excluirVeiculo() {
+            const veiculoId = document.getElementById('veiculo-id').value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('DELETE', `/deleteVeiculo/${veiculoId}`, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const mensagem = `Veículo com ID ${veiculoId} excluído com sucesso.`;
+                    document.getElementById('mensagem').textContent = mensagem;
+                } else {
+                    const mensagem = `Erro ao excluir veículo com ID ${veiculoId}. Status da resposta: ${xhr.status}`;
+                    document.getElementById('mensagem').textContent = mensagem;
+                }
+            };
+
+            xhr.onerror = function () {
+                const mensagem = 'Erro de rede ao tentar fazer a requisição.';
+                document.getElementById('mensagem').textContent = mensagem;
+            };
+
+            xhr.send();
+        }
+
+        // Função para fazer a requisição usando XMLHttpRequest e exibir os veículos na página
+        function fetchAndDisplayVeiculos() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/selectVeiculosDisponiveis', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const veiculos = JSON.parse(xhr.responseText);
+
+                    // Obtém o elemento onde os veículos serão exibidos
+                    const veiculosListElement = document.getElementById('veiculos-list');
+
+                    // Gera o HTML para os veículos
+                    const veiculosHTML = veiculos.map(veiculo => {
+                        return `<div>
+                                    <h3>${veiculo.modelo.nome} ${veiculo.modelo.versao}</h3>
+                                    <p>ID do Veículo: ${veiculo.id_veiculo}</p>
+                                    <p>Ano de Fabricação: ${veiculo.ano_fabricacao}</p>
+                                    <p>Valor: R$ ${veiculo.valor}</p>
+                                    <p>Cor: ${veiculo.cor}</p>
+                                 </div>`;
+                    }).join('');
+
+                    // Adiciona o HTML dos veículos ao elemento na página
+                    veiculosListElement.innerHTML = veiculosHTML;
+                } else {
+                    console.error('Erro ao recuperar veículos disponíveis. Status da resposta:', xhr.status);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Erro de rede ao tentar fazer a requisição.');
+            };
+
+            xhr.send();
+        }
+
+        // Chama a função para exibir os veículos quando a página é carregada
+        window.onload = fetchAndDisplayVeiculos;
+    </script>
+</body>
+
+</html>
