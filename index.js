@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const fs = require('fs');
+const moment = require('moment');
 const port = 9009
 
 const database = require('./db');
@@ -14,6 +15,7 @@ const Modelo = require('./models/modelo');
 const Veiculo = require('./models/veiculo');
 const Venda = require('./models/venda');
 const vendaVeiculo = require('./models/vendaVeiculo');
+const Sequelize = require('sequelize');
 
 app.use(express.json()); // Para analisar dados JSON no corpo da solicitação
 app.use(express.urlencoded({ extended: true })); // Para analisar dados codificados no corpo da solicitação
@@ -34,14 +36,14 @@ app.delete('/', function (req, res) {
 })
 
 app.get('/img', (req, res) => {
-const imagemPath = 'src/img.jpg'; // Substitua pelo caminho da sua imagem
-const imagem = fs.readFileSync(imagemPath);
+    const imagemPath = 'src/img.jpg'; // Substitua pelo caminho da sua imagem
+    const imagem = fs.readFileSync(imagemPath);
 
-// Defina o cabeçalho da resposta com o tipo de conteúdo da imagem
-res.contentType('image/jpeg');
+    // Defina o cabeçalho da resposta com o tipo de conteúdo da imagem
+    res.contentType('image/jpeg');
 
-// Envie a imagem como resposta
-res.send(imagem);
+    // Envie a imagem como resposta
+    res.send(imagem);
 
 })
 
@@ -83,6 +85,10 @@ app.get('/excluir_veiculo.html', function (req, res) {
     res.sendFile(__dirname + '/src/excluir_veiculo.html');
 })
 
+app.get('/visualizar_salario.html', function (req, res) {
+    res.sendFile(__dirname + '/src/visualizar_salario.html');
+})
+
 // Rota para cadastrar um novo cliente
 app.post('/insertCliente', async (req, res) => {
     try {
@@ -121,7 +127,7 @@ app.post('/insertCliente', async (req, res) => {
 // Atualizar cliente
 app.post('/updateCliente', async (req, res) => {
     try {
-        const {id_cliente, cpf,  nome, endereco, telefone, data_nasc, sexo } = req.body;
+        const { id_cliente, cpf, nome, endereco, telefone, data_nasc, sexo } = req.body;
 
         // Verifique se o cliente com o mesmo CPF já existe no banco de dados
         const clienteExistente = await Cliente.findOne({
@@ -142,9 +148,10 @@ app.post('/updateCliente', async (req, res) => {
             telefone: telefone,
             data_nasc: data_nasc,
             sexo: sexo,
-        },{
+        }, {
             where: { id_cliente: id_cliente },
-            returning: true} );
+            returning: true
+        });
 
         res.status(201).send("Cliente atualizado com sucesso!");
         // res.send('Cliente inserido com sucesso');
@@ -198,10 +205,10 @@ app.post('/insertVenda', async (req, res) => {
             await novaVenda.addVeiculo(veiculo);
         }
 
-        res.status(201).json(novaVenda);
+        res.status(201).send("Venda realizada com sucesso!");
     } catch (error) {
         console.error('Erro ao cadastrar venda:', error);
-        res.status(500).json({ error: 'Erro interno do servidor' });
+        res.status(500).send('Erro interno do servidor!');
     }
 });
 
@@ -238,9 +245,9 @@ app.get('/selectClientesBasic', async (req, res) => {
     } catch (error) {
         console.error('Erro ao recuperar clientes:', error);
         res.status(500).json({ error: 'Erro interno do servidor' });
-        
+
     }
-    
+
 });
 
 // Retorna todos os clientes cadastrados, apenas os campos id e nome
@@ -319,6 +326,66 @@ app.delete('/deleteVeiculo/:id', async (req, res) => {
         res.status(500).json({ error: 'Erro interno do servidor ao excluir veículo.' });
     }
 });
+
+app.get('/selectSalarioFuncionarioWithCPF/:cpf/:mes/:ano', async (req, res) => {
+    const cpfFunc = req.params.cpf;
+    const mes = req.params.mes;
+    const ano = req.params.ano;
+
+    // Formata as datas
+    const dataInicial = moment(`${ano}-${mes}-01`).format('YYYY-MM-DD');
+    const dataFinal = moment(`${ano}-${mes}-01`).endOf('month').format('YYYY-MM-DD');
+
+    try {
+        // Consulte o funcionário com base no CPF fornecido
+        const funcionario = await Funcionario.findOne({
+            where: {
+                cpf: cpfFunc
+            }
+        });
+
+        if (!funcionario) {
+            res.status(404).json({ error: 'Funcionário não encontrado' });
+            return;
+        }
+
+        // Consulte as vendas do funcionário para o mês específico e some as comissões
+        var totalComissao = await Venda.sum('comissao', {
+            where: {
+                id_funcionario: funcionario.id_funcionario,
+                data: {
+                    [Sequelize.Op.gte]: dataInicial,
+                    [Sequelize.Op.lte]: dataFinal
+                }
+            }
+        });
+
+        if(totalComissao == null) totalComissao = 0;
+
+        // Calcule o salário total somando o salário base do funcionário e a comissão total das vendas
+        const salarioTotal = parseFloat(funcionario.salario) + parseFloat(totalComissao);
+
+        // Construa o objeto de resposta
+        const resultado = {
+            nome: funcionario.nome,
+            cpf: funcionario.cpf,
+            salario: funcionario.salario,
+            comissao: totalComissao,
+            salarioTotal: salarioTotal
+        };
+
+        res.status(200).json(resultado);
+    } catch (error) {
+        console.error('Erro ao recuperar o funcionário informado:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+app.listen(3000, () => {
+    console.log('Servidor está rodando na porta 3000');
+});
+
+
 
 
 // app.all('/', function (req, res, next) {

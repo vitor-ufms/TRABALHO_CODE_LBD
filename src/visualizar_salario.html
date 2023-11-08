@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de vendas de veículos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            margin: 0 10px;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Sistema de vendas de veículos</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Início</a>
+        <a href="cadastrar_cliente.html">Novo cliente</a>
+        <a href="atualizar_cliente.html">Atualizar cadastro do cliente</a>
+        <a href="cadastrar_venda.html">Cadastrar Venda</a>
+        <a href="excluir_veiculo.html">Excluir veículo</a>
+        <a href="visualizar_salario.html">Visualizar salário do funcionário</a>
+    </nav>
+
+    <section>
+        <h2>Visualizar o salário de um funcionário</h2>
+
+        <p>Veja o salário de um funcionário para um mês específico, a partir do seu CPF.</p>
+
+        <label>CPF:</label>
+        <input type="text" id="cpf" name="cpf" required maxlength="11">
+
+        <br><br>
+
+        <label>Mês</label>
+        <select id="mes" name="mes">
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
+            <option value="04">Abril</option>
+            <option value="05">Maio</option>
+            <option value="06">Junho</option>
+            <option value="07">Julho</option>
+            <option value="08">Agosto</option>
+            <option value="09">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+        </select>
+
+        <label> Ano:</label>
+        <input type="text" id="ano" name="ano" required maxlength="4" pattern="\d{4}" placeholder="YYYY">
+
+        <button onclick="buscaSalario()">Buscar</button>
+
+        <h3>Resultado:</h3>
+        <div id="retorno"></div>
+    </section>
+
+    <footer>
+        &copy; 2023 Todos os direitos reservados.
+    </footer>
+
+
+    <script>
+        function buscaSalario() {
+            const cpf = document.getElementById("cpf").value;
+            const mes = document.getElementById("mes").value;
+            const ano = document.getElementById("ano").value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `/selectSalarioFuncionarioWithCPF/${cpf}/${mes}/${ano}`, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    const retornoDiv = document.getElementById("retorno");
+                    retornoDiv.innerHTML = ""; // Limpa o conteúdo anterior
+
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        const paragrafos = [
+                            `Nome: ${data.nome}`,
+                            `CPF: ${data.cpf}`,
+                            `Salário Base: R$ ${data.salario}`,
+                            `Comissão: R$ ${data.comissao}`,
+                            `Salário Total: R$ ${data.salarioTotal.toFixed(2)}`
+                        ];
+
+                        paragrafos.forEach(paragrafo => {
+                            const p = document.createElement("p");
+                            p.textContent = paragrafo;
+                            retornoDiv.appendChild(p);
+                        });
+                    } else {
+                        retornoDiv.textContent = `Erro: ${xhr.statusText}`;
+                    }
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+
+</html>

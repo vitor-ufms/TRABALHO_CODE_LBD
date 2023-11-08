@@ -63,20 +63,21 @@
         <a href="atualizar_cliente.html">Atualizar cadastro do cliente</a>
         <a href="cadastrar_venda.html">Cadastrar Venda</a>
         <a href="excluir_veiculo.html">Excluir veículo</a>
+        <a href="visualizar_salario.html">Visualizar salário do funcionário</a>
     </nav>
 
     <section>
         <h2>Cadastrar uma nova Venda</h2>
         <p>Digite os dados para registra uma venda</p>
         <form id="meuForm">
-            <label for="id_cliente">Código do cliente:</label>
+            <label for="id_cliente">Código do Cliente:</label>
             <input type="text" id="id_cliente" name="id_cliente" required maxlength="20"><br><br>
 
-            <label for="id_funcionario">Código do funcionario :</label>
+            <label for="id_funcionario">Código do Funcionário :</label>
             <input type="text" id="id_funcionario" name="id_funcionario" required maxlength="20"><br><br>
 
             <div id="container">
-                <label for="id_veiculos">Código do veículo:</label>
+                <label for="id_veiculos">Código do Veículo:</label>
                 <input type="text" id="id_veiculos" name="id_veiculos" required maxlength="20"><br><br>
             </div>
 
@@ -97,11 +98,10 @@
             <input type="submit" value="Enviar"><br><br>
         </form>
 
-        <form id="carregar_form">
-            <input type="submit" value="Listar clientes">
-        </form>
+        <input type="submit" value="Listar clientes" onclick="selectClientes()">
+        <input type="submit" value="Listar veiculos" onclick="selectVeiculos()">
 
-        <button onclick="limparDiv()">Limpar Lista de clientes</button>
+        <button onclick="limparDiv()">Limpar</button>
         
         <div id="resultado"></div>
         <aside>
@@ -114,7 +114,9 @@
             <h3>Lista de consulta</h3>
             <!-- <p>Conteúdo adicional ou links úteis podem ser colocados nesta barra lateral.</p> -->
             <!-- <div id="resposta" style="background-color: green;">Texto de exemplo</div> -->
-            <div id="list_consulta" style="background-color: rgba(207, 131, 68, 0.3);"></div><br>
+            <div id="data-list" style="background-color: rgba(207, 131, 68, 0.3);"></div>
+    
+            <!-- <div id="list_consulta" style="background-color: rgba(207, 131, 68, 0.3);"></div><br> -->
         </aside>
 
 
@@ -167,8 +169,6 @@
                 veiculos: id_veiculos
             };
 
-            // console.log('Dados recebidos no POST:', id_veiculos[0]);
-            // console.log('Dados recebidos no POST:', id_veiculos[1]);
             //Envia os dados como JSON
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify(data));
@@ -178,83 +178,102 @@
 
             // Define um ouvinte de evento para lidar com a resposta do servidor
             xhr.addEventListener('load', function () {
-                if (xhr.status === 200) {
+                var respostaa = document.getElementById('resposta');
+                respostaa.innerHTML = '';
+
+                if (xhr.status === 201) {
                     // Se a solicitação foi bem-sucedida, a resposta do servidor estará em xhr.responseText
-                    var respostaa = document.getElementById('resposta');
-                    respostaa.innerHTML = 'Respostaa do servidor: ' + xhr.responseText;
+                    respostaa.innerHTML = 'Resposta do servidor: ' + xhr.responseText;
                 } else {
                     // Trate erros ou respostas não esperadas aqui
                     console.error('Erro na solicitação: ' + xhr.status);
-                }
-            });
-        });
-
-
-        document.getElementById('carregar_form').addEventListener('submit', function (event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
-            
-            var xhrr = new XMLHttpRequest();
-            xhrr.open('get', '/selectClientesBasic', true);
-
-
-            var data = {
-                nome: "qualquer coisa"             
-            };
-
-            //Envia os dados como JSON
-            xhrr.setRequestHeader('Content-Type', 'application/json');
-            xhrr.send(JSON.stringify(data));
-
-
-            // Define um ouvinte de evento para lidar com a resposta do servidor
-            xhrr.addEventListener('load', function () {
-                if (xhrr.status === 200) {
-                    // Se a solicitação foi bem-sucedida, a resposta do servidor estará em xhr.responseText
-                    var resposta = document.getElementById('list_consulta');
-
-                    // resposta.innerHTML = 'Resposta do servidor: ' + xhrr.responseText;
-
-
-                    var jsonData = JSON.parse(xhrr.responseText);
-                    // Crie um elemento <pre> para exibir o JSON formatado
-                    var preElement = document.createElement('pre');
-                    preElement.textContent = JSON.stringify(jsonData, null, 2);
-
-                    resposta.innerHTML = 'Resposta do servidor:';
-                    // resposta.appendChild(preElement);
-
-                    var numeroDeElementos = Object.keys(jsonData).length;
-                    console.log("Número de elementos no JSON: " + numeroDeElementos);
-
-                    for (var i = 0; i < jsonData.length; i++) {
-                        var cliente = jsonData[i];
-                        var id_cliente = cliente.id_cliente;
-                        var nome = cliente.nome;
-
-                        console.log("ID do Cliente: " + id_cliente);
-                        console.log("Nome do Cliente: " + nome);
-
-                        var paragrafo = document.createElement('p');
-                        paragrafo.textContent = "ID do Cliente: " + id_cliente + ", Nome: " + nome;
-
-                        resposta.appendChild(paragrafo);
-                    }
-
-                   
-
-                } else {
-                    // Trate erros ou respostas não esperadas aqui
-                    console.error('Erro na solicitação: ' + xhrr.status);
+                    respostaa.innerHTML = 'Resposta do servidor: ' + xhr.responseText;
                 }
             });
         });
     
         function limparDiv() {
-            var div = document.getElementById('list_consulta');
+            var div = document.getElementById('data-list');
             
             while (div.firstChild) {
                 div.removeChild(div.firstChild);
             }
+        }
+
+         // Função para fazer a requisição usando XMLHttpRequest e exibir os veículos na página
+         function selectVeiculos() {
+            limparDiv();
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/selectVeiculosDisponiveis', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const veiculos = JSON.parse(xhr.responseText);
+
+                    // Obtém o elemento onde os veículos serão exibidos
+                    const veiculosListElement = document.getElementById('data-list');
+
+                    // Gera o HTML para os veículos
+                    const veiculosHTML = veiculos.map(veiculo => {
+                        return `<div>
+                                    <h3>${veiculo.modelo.nome} ${veiculo.modelo.versao}</h3>
+                                    <p>ID do Veículo: ${veiculo.id_veiculo}</p>
+                                    <p>Ano de Fabricação: ${veiculo.ano_fabricacao}</p>
+                                    <p>Valor: R$ ${veiculo.valor}</p>
+                                    <p>Cor: ${veiculo.cor}</p>
+                                 </div>`;
+                    }).join('');
+
+                    // Adiciona o HTML dos veículos ao elemento na página
+                    veiculosListElement.innerHTML = veiculosHTML;
+                } else {
+                    console.error('Erro ao recuperar veículos disponíveis. Status da resposta:', xhr.status);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Erro de rede ao tentar fazer a requisição.');
+            };
+
+            xhr.send();
+        }
+
+        // Função para fazer a requisição usando XMLHttpRequest e exibir os veículos na página
+        function selectClientes() {
+            limparDiv();
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/selectClientesBasic', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const clientes = JSON.parse(xhr.responseText);
+
+                    // Obtém o elemento onde os veículos serão exibidos
+                    const clientesListElement = document.getElementById('data-list');
+
+                    // Gera o HTML para os veículos
+                    const clientesHTML = clientes.map(cliente => {
+                        return `<div>
+                                    <p><b>ID:</b> ${cliente.id_cliente}</p>
+                                    <p><b>Nome:</b> ${cliente.nome}</p>
+                                    <br>
+                                 </div>`;
+                    }).join('');
+
+                    // Adiciona o HTML dos veículos ao elemento na página
+                    clientesListElement.innerHTML = clientesHTML;
+                } else {
+                    console.error('Erro ao recuperar os clientes disponíveis. Status da resposta:', xhr.status);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Erro de rede ao tentar fazer a requisição.');
+            };
+
+            xhr.send();
         }
 
     </script>
