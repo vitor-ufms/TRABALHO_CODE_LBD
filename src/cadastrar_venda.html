@@ -96,9 +96,10 @@
         </form>
 
         <form id="carregar_form">
-            <input type="submit" value="Carregar listas">
+            <input type="submit" value="Listar clientes">
         </form>
 
+        <button onclick="limparDiv()">Limpar Lista de clientes</button>
         <div id="resultado"></div>
         <aside>
             <h3>Barra de resultados</h3>
@@ -206,13 +207,51 @@
                 if (xhrr.status === 200) {
                     // Se a solicitação foi bem-sucedida, a resposta do servidor estará em xhr.responseText
                     var resposta = document.getElementById('list_consulta');
-                    resposta.innerHTML = 'Resposta do servidor: ' + xhrr.responseText;
+
+                    // resposta.innerHTML = 'Resposta do servidor: ' + xhrr.responseText;
+
+
+                    var jsonData = JSON.parse(xhrr.responseText);
+                    // Crie um elemento <pre> para exibir o JSON formatado
+                    var preElement = document.createElement('pre');
+                    preElement.textContent = JSON.stringify(jsonData, null, 2);
+
+                    resposta.innerHTML = 'Resposta do servidor:';
+                    // resposta.appendChild(preElement);
+
+                    var numeroDeElementos = Object.keys(jsonData).length;
+                    console.log("Número de elementos no JSON: " + numeroDeElementos);
+
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var cliente = jsonData[i];
+                        var id_cliente = cliente.id_cliente;
+                        var nome = cliente.nome;
+
+                        console.log("ID do Cliente: " + id_cliente);
+                        console.log("Nome do Cliente: " + nome);
+
+                        var paragrafo = document.createElement('p');
+                        paragrafo.textContent = "ID do Cliente: " + id_cliente + ", Nome: " + nome;
+
+                        resposta.appendChild(paragrafo);
+                    }
+
+                   
+
                 } else {
                     // Trate erros ou respostas não esperadas aqui
                     console.error('Erro na solicitação: ' + xhrr.status);
                 }
             });
         });
+    
+        function limparDiv() {
+            var div = document.getElementById('list_consulta');
+            
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+            }
+        }
 
     </script>
 </body>
