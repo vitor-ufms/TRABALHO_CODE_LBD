@@ -360,7 +360,7 @@ app.get('/selectSalarioFuncionarioWithCPF/:cpf/:mes/:ano', async (req, res) => {
             }
         });
 
-        if(totalComissao == null) totalComissao = 0;
+        if (totalComissao == null) totalComissao = 0;
 
         // Calcule o salário total somando o salário base do funcionário e a comissão total das vendas
         const salarioTotal = parseFloat(funcionario.salario) + parseFloat(totalComissao);
@@ -399,6 +399,32 @@ async function startServer() {
     try {
         // Sincroniza o banco de dados
         await database.sync();
+
+        // Criação da trigger veiculos_log
+        await database.query(`
+        SELECT 1 
+        FROM pg_trigger 
+        WHERE tgname = 'veiculos_log' 
+        AND tgrelid = 'veiculos'::regclass::oid 
+        AND tgtype & (16+8+4) = (16+8+4);  -- AFTER INSERT, UPDATE, DELETE
+      `).then(results => {
+        if (results[0].length === 0) {
+            database.query(`
+            CREATE TRIGGER veiculos_log
+            AFTER INSERT OR UPDATE OR DELETE ON veiculos
+            FOR EACH ROW
+            EXECUTE FUNCTION trigger_veiculos();
+          `).then(() => {
+            console.log('Trigger veiculos_log criada com sucesso.');
+          }).catch(error => {
+            console.error('Erro ao criar a trigger:', error);
+          });
+        } else {
+          console.log('A trigger veiculos_log já existe.');
+        }
+      }).catch(error => {
+        console.error('Erro ao verificar a trigger:', error);
+      });
 
         // Verifica se a tabela de fabricantes está vazia
         const fabricanteCount = await Fabricante.count();
