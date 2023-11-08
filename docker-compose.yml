@@ -35,7 +35,7 @@ services:
     image: node
     container_name: nodejs-interface
     working_dir: /lbd
-    command:  npm run dev
+    command:  sh -c "npm ci; npm run dev"
     environment:
       LOGIN_EMAIL: pgadmin4@pgadmin.org
       PASSWORD: pgadmin4
