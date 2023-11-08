@@ -67,17 +67,17 @@
 
     <section>
         <h2>Cadastrar uma nova Venda</h2>
-        <p>Para realizar o cadastro da compra </p>
+        <p>Digite os dados para registra uma venda</p>
         <form id="meuForm">
             <label for="id_cliente"> código do cliente:</label>
-            <input type="text" id="id_cliente" name="id_cliente" required maxlength="20"><br>
+            <input type="text" id="id_cliente" name="id_cliente" required maxlength="20"><br><br>
 
             <label for="id_funcionario"> código do funcionario :</label>
-            <input type="text" id="id_funcionario" name="id_funcionario" required maxlength="20"><br>
+            <input type="text" id="id_funcionario" name="id_funcionario" required maxlength="20"><br><br>
 
             <div id="container">
                 <label for="id_veiculos"> código do veículo:</label>
-                <input type="text" id="id_veiculos" name="id_veiculos" required maxlength="20"><br>
+                <input type="text" id="id_veiculos" name="id_veiculos" required maxlength="20"><br><br>
             </div>
 
 
@@ -85,16 +85,16 @@
             <input type="text" id="id_veiculos" name="id_veiculos" required maxlength="20"><br> -->
             
             <label for="valor">Valor final da venda:</label>
-            <input type="number" id="valor" name="valor" step="0.01" required><br>            
+            <input type="number" id="valor" name="valor" step="0.01" required><br><br>         
 
 
             <label for="metodo_pagamento">Método de pagamento:</label>
-            <input type="text" id="metodo_pagamento" name="metodo_pagamento" required maxlength="20"><br>
+            <input type="text" id="metodo_pagamento" name="metodo_pagamento" required maxlength="20"><br><br>
 
-            <input type="button" value="Adicionar campo" onclick="addInput()">
+            <input type="button" value="Adicionar mais veículos" onclick="addInput()">
             <button type="reset">Limpar</button>
 
-            <input type="submit" value="Enviar">
+            <input type="submit" value="Enviar"><br><br>
         </form>
 
         <form id="carregar_form">
@@ -108,13 +108,13 @@
             <h3>Barra de resultados</h3>
             <!-- <p>Conteúdo adicional ou links úteis podem ser colocados nesta barra lateral.</p> -->
             <!-- <div id="resposta" style="background-color: green;">Texto de exemplo</div> -->
-            <div id="resposta" style="background-color: green;"></div><br>
+            <div id="resposta" style="background-color: rgba(84, 160, 214, 0.3);"></div><br>
         </aside>
         <aside>
             <h3>Lista de consulta</h3>
             <!-- <p>Conteúdo adicional ou links úteis podem ser colocados nesta barra lateral.</p> -->
             <!-- <div id="resposta" style="background-color: green;">Texto de exemplo</div> -->
-            <div id="list_consulta" style="background-color: green;"></div><br>
+            <div id="list_consulta" style="background-color: rgba(207, 131, 68, 0.3);"></div><br>
         </aside>
 
 

@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const fs = require('fs');
 const port = 9009
 
 const database = require('./db');
@@ -30,6 +31,18 @@ app.put('/', function (req, res) {
 
 app.delete('/', function (req, res) {
     res.send('Got a DELETE request at /user');
+})
+
+app.get('/img', (req, res) => {
+const imagemPath = 'src/img.jpg'; // Substitua pelo caminho da sua imagem
+const imagem = fs.readFileSync(imagemPath);
+
+// Defina o cabeçalho da resposta com o tipo de conteúdo da imagem
+res.contentType('image/jpeg');
+
+// Envie a imagem como resposta
+res.send(imagem);
+
 })
 
 app.get('/', (req, res) => {
@@ -104,6 +117,43 @@ app.post('/insertCliente', async (req, res) => {
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
+
+// Atualizar cliente
+app.post('/updateCliente', async (req, res) => {
+    try {
+        const {id_cliente, cpf,  nome, endereco, telefone, data_nasc, sexo } = req.body;
+
+        // Verifique se o cliente com o mesmo CPF já existe no banco de dados
+        const clienteExistente = await Cliente.findOne({
+            where: {
+                cpf: cpf,
+            },
+        });
+
+        if (!clienteExistente) {
+            // res.send('Cliente com este CPF já cadastrado.');
+            return res.status(400).json({ error: 'Cliente com este CPF não cadastrado.' });
+        }
+
+        // Crie um novo cliente no banco de dados
+        const updateCliente = await Cliente.update({
+            nome: nome,
+            endereco: endereco,
+            telefone: telefone,
+            data_nasc: data_nasc,
+            sexo: sexo,
+        },{
+            where: { id_cliente: id_cliente },
+            returning: true} );
+
+        res.status(201).json(updateCliente);
+        // res.send('Cliente inserido com sucesso');
+    } catch (error) {
+        console.error('Erro ao cadastrar cliente:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
 
 // Rota para cadastrar um novo veiculo
 app.post('/insertVeiculo', async (req, res) => {
@@ -212,6 +262,7 @@ app.get('/selectClienteFullwithCPF/:cpf', async (req, res) => {
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
+
 
 // Retorna todos os funcionários cadastrados, apenas os campos id e nome
 app.get('/selectFuncionarioBasic', async (req, res) => {

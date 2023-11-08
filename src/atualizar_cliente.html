@@ -69,25 +69,28 @@
         <p>Para realizar a atualização do cadastro de um cliente, informe o CPF a seguir. </p>
 
         <h3>Digite o CPF do cliente:</h3>
-        <input type="text" id="cpf_cliente">
+        <input type="text" id="cpf_cliente" required maxlength="11"><br>
 
-        <button onclick="buscarCliente()">Buscar Cliente</button>
+        <button onclick="buscarCliente()">Buscar Cliente</button><br><br>
 
         <form id="meuForm">
             <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required maxlength="200"><br>
+            <input type="text" id="nome" name="nome" required maxlength="200"><br><br>
+
+            <label for="id_cliente"> id do cliente:</label>
+            <input type="text" id="id_cliente" name="id_cliente" required maxlength="11"><br><br>
 
             <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required maxlength="11"><br>
+            <input type="text" id="cpf" name="cpf" required maxlength="11"><br><br>
 
             <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" name="endereco" required maxlength="200"><br>
+            <input type="text" id="endereco" name="endereco" required maxlength="200"><br><br>
 
             <label for="telefone">Telefone:</label>
-            <input type="text" id="telefone" name="telefone" required maxlength="11"><br>
+            <input type="text" id="telefone" name="telefone" required maxlength="11"><br><br>
 
             <label for="data_nasc">Data de Nascimento:</label>
-            <input type="date" id="data_nasc" name="data_nasc" required><br>
+            <input type="date" id="data_nasc" name="data_nasc" required><br><br>
 
 
             <!-- <!-- <label for="newsletter">Desejo receber a newsletter:</label>
@@ -129,9 +132,10 @@
             event.preventDefault(); // Impede o envio padrão do formulário
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/insertCliente', true);
+            xhr.open('POST', '/updateCliente', true);
 
             // Obtém os valores dos campos do formulário
+            var id_cliente = document.getElementById('id_cliente').value
             var nome = document.getElementById('nome').value;
             var cpf = document.getElementById('cpf').value;
             var endereco = document.getElementById('endereco').value;
@@ -139,9 +143,8 @@
             var data_nasc = document.getElementById('data_nasc').value;
             var sexo = document.querySelector('input[name="sexo"]:checked').value;
 
-
-
             var data = {
+                id_cliente: id_cliente,
                 nome: nome,
                 cpf: cpf,
                 endereco: endereco,
@@ -154,8 +157,8 @@
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify(data));
 
-            var resultado = document.getElementById('resultado');
-            resultado.innerHTML = 'Nome: ' + nome + '<br>cpf: ' + cpf;
+            // var resultado = document.getElementById('resultado');
+            // resultado.innerHTML = 'Nome: ' + nome + '<br>cpf: ' + cpf;
 
             // Define um ouvinte de evento para lidar com a resposta do servidor
             xhr.addEventListener('load', function () {
@@ -187,6 +190,7 @@
                     if (clientes.length > 0) {
                         const cliente = clientes[0]; // Pega o primeiro cliente encontrado
                         // Preenche o formulário com os dados do cliente
+                        document.getElementById('id_cliente').value = cliente.id_cliente;
                         document.getElementById('nome').value = cliente.nome;
                         document.getElementById('cpf').value = cliente.cpf;
                         document.getElementById('endereco').value = cliente.endereco;
