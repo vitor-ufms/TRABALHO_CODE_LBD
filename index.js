@@ -436,7 +436,35 @@ async function startServer() {
             CREATE TRIGGER veiculos_log
             AFTER INSERT OR UPDATE OR DELETE ON veiculos
             FOR EACH ROW
-            EXECUTE FUNCTION trigger_veiculos();        
+            EXECUTE FUNCTION trigger_veiculos(); 
+            
+            create table cliente_log(
+                id_cliente integer,
+                cpf_cliente varchar(11),
+                nome_cliente varchar(100),
+                data_cliente date,
+                tipo char(1)
+                );
+                
+                CREATE OR REPLACE FUNCTION trigger_clientes()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                  IF TG_OP = 'UPDATE' THEN
+                    insert into cliente_log (id_cliente, cpf_cliente, nome_cliente, data_cliente, tipo) values (old.id_cliente, old.cpf, old.nome, current_date, 'U');
+                    return new;
+                  ELSIF TG_OP = 'DELETE' THEN
+                      insert into cliente_log (id_cliente, cpf_cliente, nome_cliente, data_cliente, tipo) values (old.id_cliente, old.cpf, old.nome, current_date, 'D');
+                  ELSIF TG_OP = 'INSERT' THEN
+                    insert into cliente_log (id_cliente, cpf_cliente, nome_cliente, data_cliente, tipo) values (null, new.cpf, new.nome, current_date, 'I');
+                 END IF;
+                  RETURN NULL;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                CREATE TRIGGER cliente_log
+                AFTER INSERT OR UPDATE OR DELETE ON clientes
+                FOR EACH ROW
+                EXECUTE FUNCTION trigger_clientes();                         
           `).then(() => {
             console.log('Trigger veiculos_log criada com sucesso.');
           }).catch(error => {
